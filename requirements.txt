@@ -1,2 +1,4 @@
-django==3
-djangorestframework==3.11
+django==3.0.1
+djangorestframework==3.11.0
+
+flake8==3.7.9
