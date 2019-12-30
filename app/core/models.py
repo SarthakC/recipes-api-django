@@ -1,6 +1,9 @@
-from django.db.models import EmailField, CharField, BooleanField
+from django.db.models import (
+    EmailField, CharField, BooleanField, Model, ForeignKey, CASCADE)
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
+
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -35,3 +38,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+
+class Tag(Model):
+    """Tag to be used for a recipe"""
+
+    name = CharField(max_length=255)
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+
+    def __str__(self):
+        return self.name
