@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.test import TestCase
 
 from rest_framework.status import (
-    HTTP_401_UNAUTHORIZED, HTTP_200_OK)
+    HTTP_401_UNAUTHORIZED, HTTP_200_OK, HTTP_400_BAD_REQUEST)
 from rest_framework.test import APIClient
 
 from core.models import Ingredient
@@ -65,3 +65,19 @@ class PrivateIngredientsApiTests(TestCase):
         self.assertEqual(res.status_code, HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], ingredient.name)
+
+    def test_create_ingredients_successful(self):
+        """Test create a new ingredient"""
+        payload = {'name': 'Cabbage'}
+        self.client.post(INGREDIENTS_URL, payload)
+
+        exists = Ingredient.objects.filter(user=self.user,
+                                           name=payload['name']).exists()
+        self.assertTrue(exists)
+
+    def test_create_ingredients_invalid(self):
+        """Test creating invalid ingredients fails"""
+        payload = {'name': ''}
+        res = self.client.post(INGREDIENTS_URL, payload)
+
+        self.assertEqual(res.status_code, HTTP_400_BAD_REQUEST)
