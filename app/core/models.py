@@ -1,5 +1,6 @@
-from django.db.models import (
-    EmailField, CharField, BooleanField, Model, ForeignKey, CASCADE)
+from django.db.models import (EmailField, CharField, BooleanField, Model,
+                              ForeignKey, IntegerField, DecimalField,
+                              ManyToManyField, CASCADE)
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 
@@ -58,3 +59,18 @@ class Ingredient(Model):
 
     def __str__(self):
         return self.name
+
+
+class Recipe(Model):
+    """Recipe object"""
+
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+    title = CharField(max_length=255)
+    time_minutes = IntegerField()
+    price = DecimalField(max_digits=5, decimal_places=2)
+    link = CharField(max_length=255, blank=True)
+    ingredients = ManyToManyField('Ingredient')
+    tags = ManyToManyField('Tag')
+
+    def __str__(self):
+        return self.title
