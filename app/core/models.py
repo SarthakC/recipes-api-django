@@ -1,10 +1,21 @@
+from uuid import uuid4
+from os.path import join
+
 from django.db.models import (EmailField, CharField, BooleanField, Model,
-                              ForeignKey, IntegerField, DecimalField,
+                              ForeignKey, IntegerField, DecimalField, ImageField,
                               ManyToManyField, CASCADE)
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 
 from django.conf import settings
+
+
+def recipe_image_file_path(instance, filename):
+    """Generate filepath for new recipe image"""
+    ext = filename.split('.')[-1]
+    filename = f'{uuid4}().{ext}'
+
+    return join('uploads/recipe/', filename)
 
 
 class UserManager(BaseUserManager):
@@ -71,6 +82,7 @@ class Recipe(Model):
     link = CharField(max_length=255, blank=True)
     ingredients = ManyToManyField('Ingredient')
     tags = ManyToManyField('Tag')
+    image = ImageField(null=True, upload_to=recipe_image_file_path)
 
     def __str__(self):
         return self.title
