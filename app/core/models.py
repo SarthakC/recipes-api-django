@@ -1,9 +1,9 @@
-from uuid import uuid4
-from os.path import join
+import uuid
+from os import path
 
 from django.db.models import (EmailField, CharField, BooleanField, Model,
-                              ForeignKey, IntegerField, DecimalField, ImageField,
-                              ManyToManyField, CASCADE)
+                              ForeignKey, IntegerField, DecimalField,
+                              ImageField, ManyToManyField, CASCADE)
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager, PermissionsMixin)
 
@@ -11,11 +11,11 @@ from django.conf import settings
 
 
 def recipe_image_file_path(instance, filename):
-    """Generate filepath for new recipe image"""
+    """Generate file path for new recipe image"""
     ext = filename.split('.')[-1]
-    filename = f'{uuid4}().{ext}'
+    filename = f'{uuid.uuid4()}.{ext}'
 
-    return join('uploads/recipe/', filename)
+    return path.join('uploads/recipe/', filename)
 
 
 class UserManager(BaseUserManager):
